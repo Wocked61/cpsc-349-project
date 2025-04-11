@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
 
-key = "key=&format=json"
+key = "key=XS97K4NT1RCB&format=json"
 
 urlList = "http://api.timezonedb.com/v2.1/list-time-zone?";
 
