@@ -8,8 +8,9 @@ function Header() {
       <nav>
         <ul>
           <li><a href="#Home">Home</a></li>
-          <li><a href="#AllTimeZones">TimeZones</a></li>
-          <li><a href="#ConvertTime">Convert Time</a></li>
+          <li><a href="#App">TimeZones</a></li>
+          <li><a href="#Map">Map</a></li>
+          <li><a href="#Convert">Convert Time</a></li>
         </ul>
       </nav>
       <hr></hr>
