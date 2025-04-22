@@ -11,7 +11,7 @@ return (
     <div className="Home">
         <Header />
         <main>
-            <h1>Welcome to the Timezone/Weather App</h1>
+            <h1>Welcome to Regional Cloud</h1>
             <p>This app allows you to view timezones and weather information.</p>
             <p>Use the navigation bar to explore different features.</p>
         </main>

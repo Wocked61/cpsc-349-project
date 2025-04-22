@@ -1,7 +1,10 @@
+import React from 'react';
+import './Header.css';
+
 function Header() {
   return (
     <header>
-      <h1>Timezone/Weather App</h1>
+      <h1>Regional Cloud</h1>
       <nav>
         <ul>
           <li><a href="#Home">Home</a></li>
