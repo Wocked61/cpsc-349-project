@@ -88,6 +88,7 @@ export default function App() {
   };
 
   return (
+    
     <div>
       <div className="header">Weather Dashboard</div>
       <div className="container">
@@ -103,7 +104,7 @@ export default function App() {
           <label>
             <strong>Select Forecast Days</strong>
           </label>
-          <select value={days} onChange={(e) => setDays(e.target.value)}>
+          <select value={days} onChange={(e) => setDays(Number(e.target.value))}>
             <option value={5}>5 Days</option>
             <option value={6}>6 Days</option>
             <option value={7}>7 Days</option>
