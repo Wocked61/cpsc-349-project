@@ -9,7 +9,6 @@ function Home() {
 
 return (
     <div className="Home">
-        <Header />
         <main>
             <h1>Welcome to Regional Cloud</h1>
             <p>This app allows you to view timezones and weather information.</p>
