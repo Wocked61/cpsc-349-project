@@ -13,7 +13,7 @@ export default function Map() {
     // Create map instance after Leaflet is loaded
     const initMap = () => {
       if (!mapRef.current) {
-        mapRef.current = L.map('map').setView([51.505, -0.09], 13);
+        mapRef.current = L.map('map').setView([40, -95], 4);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors'
         }).addTo(mapRef.current);
