@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Footer from "./Footer";
+import Header from "./Header";
 
 const App = () => {
   const [city, setCity] = useState("");
@@ -70,41 +71,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="navbar">
-        <div className="logo">
-          <a href="/">
-            <img src="weather_logo2.png" alt="logo" />
-            <h1>Weather Dashboard</h1>
-          </a>
-        </div>
-        <button
-          className="toggle_btn"
-          onClick={toggleMenu}
-          aria-label="Toggle Navigation"
-        >
-          ☰
-        </button>
-        <ul className={`menu ${menuOpen ? "open" : ""}`}>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/">Map</a>
-          </li>
-          <li>
-            <a href="/">News</a>
-          </li>
-          <li>
-            <a href="/">Careers</a>
-          </li>
-          <li>
-            <a href="/">Contact</a>
-          </li>
-          <li>
-            <a href="/">About Us</a>
-          </li>
-        </ul>
-      </header>
 
       <main className="dashboard-layout">
         <div className="left-panel">
@@ -198,8 +164,9 @@ const App = () => {
         </div>
       </main>
 
-      <footer>
-        <div className="footer-contact">Contact Us</div>
+      {/* <footer> */}
+        <Footer />           
+        {/* <div className="footer-contact">Contact Us</div>
         <div className="footer-icons">
           <a href="#" aria-label="Facebook">
             <i className="fab fa-facebook-f"></i>
@@ -216,9 +183,9 @@ const App = () => {
         </div>
         <div className="footer-credit">
           Powered by OpenWeatherMap and TimeZoneDB APIs
-        </div>
-        <Footer />   
-      </footer>
+        </div> */}
+
+      {/* </footer> */}
     </div>
   );
 };

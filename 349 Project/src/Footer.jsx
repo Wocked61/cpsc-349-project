@@ -6,6 +6,7 @@ function Footer() {
         <footer className="footer">
             <div className="footer-container">
                 <div className='footer-content'>
+                    <p className="footer-text"></p>
                 </div>
 
                 <div className="footer-content">
