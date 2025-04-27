@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "./Footer";
 
 function Convert() {
     const [timeZone, setTimeZone] = React.useState("America/New_York");
@@ -34,9 +35,12 @@ function Convert() {
         {convertedTime && (
             <div className="converted-time">
             Converted Time: {convertedTime}
+            
             </div>
         )}
+             <Footer />   
         </div>
+
     );
     }
 

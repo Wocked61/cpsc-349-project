@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Map.css";
+import Footer from "./Footer";
 
 //this API doesnt need a key use the link below to get the information
 // the documentation is in this link https://leafletjs.com/examples/quick-start/
@@ -44,6 +45,8 @@ export default function Map() {
   return (
     <div className="map-container">
       <div id="map"></div>
+      <Footer />
     </div>
+    
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import Footer from "./Footer";
 
 const App = () => {
   const [city, setCity] = useState("");
@@ -216,6 +217,7 @@ const App = () => {
         <div className="footer-credit">
           Powered by OpenWeatherMap and TimeZoneDB APIs
         </div>
+        <Footer />   
       </footer>
     </div>
   );
