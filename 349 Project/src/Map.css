@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: w;
   }
   
   #map {
@@ -12,3 +13,4 @@
     border: 2px solid #5d82e6;
     border-radius: 10px;
   }
+

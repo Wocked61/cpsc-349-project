@@ -14,7 +14,7 @@ function Footer() {
                     <p className="footer-text">Dylan Phan</p>
                     <p className="footer-text">Tony Dinh</p>
                     <p className="footer-text">Derek Castanon</p>
-                    <p className="footer-text">© {new Date().getFullYear()} TimeZoneDB. All rights reserved.</p>
+                    <p className="footer-text">Powered by OpenWeatherMap, TimeZoneDB, Leaflet APIs</p>
                 </div>
             </div>
         </footer>

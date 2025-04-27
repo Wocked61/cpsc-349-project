@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
+
 import "./Home.css";
 
-import Header from "./Header";
 import Footer from "./Footer";
 
 function Home() {
 
 
 return (
-    <div className="Home">
-        <main>
-            <h1>Welcome to Regional Cloud</h1>
-            <p>This app allows you to view timezones and weather information.</p>
-            <p>Use the navigation bar to explore different features.</p>
-        </main>
-            <Footer />
-        </div>
-);
+    <div className="home-container">
+      <main className="content">
+        <h1>Welcome to Regional Cloud</h1>
+        <p>This app allows you to view timezones and weather information.</p>
+        <p>Use the navigation bar to explore different features.</p>
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
 

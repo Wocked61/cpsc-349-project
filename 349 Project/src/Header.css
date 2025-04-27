@@ -9,7 +9,7 @@ header {
 
 /* Header Styles */
 .navbar {
-    position: sticky;
+    position: relative;
     top: 0;
     background-color: whitesmoke;
     display: flex;
