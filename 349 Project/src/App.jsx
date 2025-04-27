@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Footer from "./Footer";
-import Header from "./Header";
 
 const App = () => {
   const [city, setCity] = useState("");
@@ -163,29 +162,7 @@ const App = () => {
           )}
         </div>
       </main>
-
-      {/* <footer> */}
-        <Footer />           
-        {/* <div className="footer-contact">Contact Us</div>
-        <div className="footer-icons">
-          <a href="#" aria-label="Facebook">
-            <i className="fab fa-facebook-f"></i>
-          </a>
-          <a href="#" aria-label="Twitter">
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a href="#" aria-label="Instagram">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="#" aria-label="Email">
-            <i className="fas fa-envelope"></i>
-          </a>
-        </div>
-        <div className="footer-credit">
-          Powered by OpenWeatherMap and TimeZoneDB APIs
-        </div> */}
-
-      {/* </footer> */}
+      <Footer />
     </div>
   );
 };
