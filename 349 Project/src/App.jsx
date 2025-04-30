@@ -162,8 +162,9 @@ const App = () => {
           )}
         </div>
       </main>
-      <Footer />
+      <Footer />    
     </div>
+
   );
 };
 

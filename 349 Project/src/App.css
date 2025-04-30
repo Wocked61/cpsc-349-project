@@ -3,7 +3,10 @@ body {
   background-color: #dfeef7;
   margin: 0;
   padding: 0;
+  height: 100vh;
 }
+
+
 .header {
   background-color: #5d82e6;
   color: white;

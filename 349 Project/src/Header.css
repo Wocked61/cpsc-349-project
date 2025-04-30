@@ -40,7 +40,7 @@ header {
 
   .navbar a:hover {
     color: white;
-      background-color: #555;
+      background-color: #5d82e6;
       border-radius: 4px;
       cursor: pointer;
   }
@@ -85,7 +85,7 @@ header {
   }
   
   .menu li a:hover {
-    background-color: #444;
+    background-color: #5d82e6;
     border-radius: 5px;
   }
   

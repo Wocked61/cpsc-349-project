@@ -20,3 +20,19 @@ main {
   padding: 20px;
 }
 
+.text {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.box {
+  width: 700px;
+  padding: 5rem;
+}
+
+.container {
+  justify-content: left;
+  height: 100vh;
+}
