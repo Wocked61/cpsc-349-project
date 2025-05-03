@@ -8,10 +8,24 @@ const App = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [timeData, setTimeData] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [localTime, setLocalTime] = useState("");
 
   useEffect(() => {
-    fetchWeather("Los Angeles", 5);
+    if (geo) {
+      handleCurrentLocation();
+    } else if (inputCity) {
+      fetchWeather(inputCity, days);
+    } else {
+      fetchWeather("Los Angeles", 5);
+    }
   }, []);
+
+  useEffect(() => {
+    return () => {
+      clearInterval(window._clockInterval);
+    };
+  }, []);
+
 
   const fetchWeather = async (location, forecastDays) => {
     const apiKey = "9c1bcf57b8d6f8fb40fbd283fd3dd3c1";
@@ -44,10 +58,25 @@ const App = () => {
       );
       const data = await res.json();
       setTimeData(data);
+      startClock(data.zoneName);
     } catch (err) {
       console.error("Time API error", err);
       setTimeData(null);
     }
+  };
+
+  const startClock = (zoneName) => {
+    clearInterval(window._clockInterval);
+    window._clockInterval = setInterval(() => {
+      const now = new Date();
+      const formatted = new Intl.DateTimeFormat("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZone: zoneName,
+      }).format(now);
+      setLocalTime(formatted);
+    }, 1000);
   };
 
   const getIconLabel = (code) => (code.includes("d") ? "☀️" : "🌙");
@@ -68,103 +97,108 @@ const App = () => {
     setMenuOpen((prev) => !prev);
   };
 
+  const query = new URLSearchParams(window.location.search);
+  const inputCity = query.get("city");
+  const geo = query.get("geo") === "true";
+
+
   return (
     <div className="App">
-
-      <main className="dashboard-layout">
-        <div className="left-panel">
-          <div className="search-area">
-            <label>
-              <strong>Enter a City Name or Zip Code</strong>
-            </label>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="E.g., New York, London, 90210"
-            />
-            <label>
-              <strong>Select Forecast Days</strong>
-            </label>
-            <select
-              value={days}
-              onChange={(e) => setDays(Number(e.target.value))}
-            >
-              <option value={5}>5 Days</option>
-              <option value={7}>7 Days</option>
-            </select>
-            <button className="search" onClick={() => fetchWeather(city, days)}>
-              Search
-            </button>
-            <hr />
-            <button
-              className="current-location"
-              onClick={handleCurrentLocation}
-            >
-              Use Current Location
-            </button>
-          </div>
-          {timeData && (
-            <>
-              <div className="info-box">Local Time: {timeData.formatted}</div>
-              <div className="info-box">Timezone: {timeData.zoneName}</div>
-            </>
-          )}
-        </div>
-
-        <div className="right-panel">
-          {weatherData && (
-            <>
-              <div className="weather-card">
-                <h3>Today</h3>
-                <div>
-                  <div className="bold">{weatherData.city.name}</div>
-                  <div>Temperature: {weatherData.list[0].main.temp}°C</div>
-                  <div>Wind: {weatherData.list[0].wind.speed} M/S</div>
-                  <div>Humidity: {weatherData.list[0].main.humidity}%</div>
+      <div class="center-wrapper">
+        <main className="dashboard-layout">
+                <div className="left-panel">
+                  <div className="search-area">
+                    <label>
+                      <strong>Enter a City Name or Zip Code</strong>
+                    </label>
+                    <input
+                      type="text"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="E.g., New York, London, 90210"
+                    />
+                    <label>
+                      <strong>Select Forecast Days</strong>
+                    </label>
+                    <select
+                      value={days}
+                      onChange={(e) => setDays(Number(e.target.value))}
+                    >
+                      <option value={5}>5 Days</option>
+                      <option value={7}>7 Days</option>
+                    </select>
+                    <button className="search" onClick={() => fetchWeather(city, days)}>
+                      Search
+                    </button>
+                    <hr />
+                    <button
+                      className="current-location"
+                      onClick={handleCurrentLocation}
+                    >
+                      Use Current Location
+                    </button>
+                  </div>
+                  {timeData && (
+                    <>
+                      <div className="info-box">Local Time: {localTime}</div>
+                      <div className="info-box">Timezone: {timeData.zoneName}</div>
+                    </>
+                  )}
                 </div>
-                <div>
-                  {weatherData.list[0].weather[0].description}{" "}
-                  {getIconLabel(weatherData.list[0].weather[0].icon)}
-                  <br />
-                  <img
-                    src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@2x.png`}
-                    alt="icon"
-                  />
-                </div>
-              </div>
 
-              <h2>Forecast</h2>
-              <div className="forecast">
-                {Array.from(
-                  { length: days - 1 },
-                  (_, i) => weatherData.list[(i + 1) * 8]
-                ).map((forecast, idx) =>
-                  forecast ? (
-                    <div className="forecast-day" key={idx}>
-                      <div>({forecast.dt_txt.split(" ")[0]})</div>
-                      <div>
-                        {forecast.weather[0].description}{" "}
-                        {getIconLabel(forecast.weather[0].icon)}
+                <div className="right-panel">
+                  {weatherData && (
+                    <>
+                      <div className="weather-card">
+                        <h3>Today</h3>
+                        <div>
+                          <div className="bold">{weatherData.city.name}</div>
+                          <div>Temperature: {weatherData.list[0].main.temp}°C</div>
+                          <div>Wind: {weatherData.list[0].wind.speed} M/S</div>
+                          <div>Humidity: {weatherData.list[0].main.humidity}%</div>
+                        </div>
+                        <div>
+                          {weatherData.list[0].weather[0].description}{" "}
+                          {getIconLabel(weatherData.list[0].weather[0].icon)}
+                          <br />
+                          <img
+                            src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@2x.png`}
+                            alt="icon"
+                          />
+                        </div>
                       </div>
-                      <img
-                        src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
-                        alt="icon"
-                      />
-                      <div>Temp: {forecast.main.temp}°C</div>
-                      <div>Wind: {forecast.wind.speed} M/S</div>
-                      <div>Humidity: {forecast.main.humidity}%</div>
-                    </div>
-                  ) : null
-                )}
-              </div>
-            </>
-          )}
-        </div>
-      </main>
-      <Footer />    
-    </div>
 
+                      <h2>Forecast</h2>
+                      <div className="forecast">
+                        {Array.from(
+                          { length: days - 1 },
+                          (_, i) => weatherData.list[(i + 1) * 8]
+                        ).map((forecast, idx) =>
+                          forecast ? (
+                            <div className="forecast-day" key={idx}>
+                              <div>({forecast.dt_txt.split(" ")[0]})</div>
+                              <div>
+                                {forecast.weather[0].description}{" "}
+                                {getIconLabel(forecast.weather[0].icon)}
+                              </div>
+                              <img
+                                src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
+                                alt="icon"
+                              />
+                              <div>Temp: {forecast.main.temp}°C</div>
+                              <div>Wind: {forecast.wind.speed} M/S</div>
+                              <div>Humidity: {forecast.main.humidity}%</div>
+                            </div>
+                          ) : null
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </main>
+      </div>
+      <Footer />
+    </div>
   );
 };
 
