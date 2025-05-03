@@ -6,6 +6,27 @@ function Home() {
   const [searchInput, setSearchInput] = useState("");
   const [la, setLa] = useState({ temp: "", time: "", icon: "" });
   const [ny, setNy] = useState({ temp: "", time: "", icon: "" });
+  const [backgroundIndex, setBackgroundIndex] = useState(0);
+  
+  // Array of background images
+  const backgroundImages = [
+    "https://images.pexels.com/photos/186980/pexels-photo-186980.jpeg?cs=srgb&dl=pexels-tahir-shaw-50609-186980.jpg&fm=jpg",
+    "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/1755683/pexels-photo-1755683.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/2114014/pexels-photo-2114014.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/1431822/pexels-photo-1431822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  ];
+
+  // Background rotation effect
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setBackgroundIndex((prevIndex) => 
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);// change the time here ratio is 1:1000
+
+    return () => clearInterval(intervalId); 
+  }, []);
 
   useEffect(() => {
     const apiKey = "9c1bcf57b8d6f8fb40fbd283fd3dd3c1";
@@ -53,14 +74,15 @@ function Home() {
   };
 
   return (
-<div className="home-container"
-    style={{
-      backgroundImage: "linear-gradient(rgba(135, 206, 235, 0.3), rgba(135, 206, 235, 0.3)), url('https://images.pexels.com/photos/186980/pexels-photo-186980.jpeg?cs=srgb&dl=pexels-tahir-shaw-50609-186980.jpg&fm=jpg')",
-      backgroundSize: "100%",
-      backgroundPosition: "top center",
-      backgroundRepeat: "no-repeat",
-      maxHeight: "30vh"
-  }}>
+    <div className="home-container blurred-bg"
+      style={{
+        backgroundImage: `linear-gradient(rgba(135, 206, 235, 0.3), rgba(135, 206, 235, 0.3)), url('${backgroundImages[backgroundIndex]}')`,
+        backgroundSize: "100%",
+        backgroundPosition: "top center",
+        backgroundRepeat: "no-repeat",
+        maxHeight: "30vh",
+        transition: "background-image 1s ease-in-out"
+      }}>
       <main className="content">
         <div className="main-content-row">
           <div className="weather-box">
