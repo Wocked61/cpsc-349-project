@@ -8,7 +8,6 @@ function Home() {
   const [ny, setNy] = useState({ temp: "", time: "", icon: "" });
   const [backgroundIndex, setBackgroundIndex] = useState(0);
   
-  // Array of background images
   const backgroundImages = [
     "https://images.pexels.com/photos/186980/pexels-photo-186980.jpeg?cs=srgb&dl=pexels-tahir-shaw-50609-186980.jpg&fm=jpg",
     "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -17,7 +16,6 @@ function Home() {
     "https://images.pexels.com/photos/1431822/pexels-photo-1431822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
   ];
 
-  // Background rotation effect
   useEffect(() => {
     const intervalId = setInterval(() => {
       setBackgroundIndex((prevIndex) => 
