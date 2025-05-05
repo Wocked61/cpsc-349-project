@@ -68,8 +68,37 @@ function Home() {
   };
 
   const handleGeo = () => {
-    window.location.href = `/App?geo=true`;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          window.location.href = `/App?lat=${latitude}&lon=${longitude}`;
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          alert("Unable to get your location. Please make sure location services are enabled in your browser.");
+        },
+        { timeout: 10000, enableHighAccuracy: true }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.has('lat') && params.has('lon')) {
+      const lat = params.get('lat');
+      const lon = params.get('lon');
+      
+      fetchWeatherByCoords(lat, lon);
+    } 
+    else if (params.has('city')) {
+      const city = params.get('city');
+      fetchWeatherByCity(city);
+    }
+  }, []);
 
   return (
     <div className="home-container blurred-bg"
