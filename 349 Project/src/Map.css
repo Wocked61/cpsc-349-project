@@ -14,3 +14,9 @@
     border-radius: 10px;
   }
 
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #3a8ae0, #00c6d8);
+    margin: 0;
+    padding: 0;
+  }
