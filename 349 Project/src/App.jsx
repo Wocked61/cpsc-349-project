@@ -183,7 +183,10 @@ const App = () => {
                 <option value={5}>5 Days</option>
                 <option value={7}>7 Days</option>
               </select>
-              <button                 className="search"                 onClick={() => fetchWeather(city, days)}              >
+              <button
+                className="search"
+                onClick={() => fetchWeather(city, days)}
+              >
                 Search
               </button>
               <hr />
