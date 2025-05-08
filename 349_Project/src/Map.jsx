@@ -13,10 +13,18 @@ export default function Map() {
     // Create map instance after Leaflet is loaded
     const initMap = () => {
       if (!mapRef.current) {
-        mapRef.current = L.map('map').setView([40, -95], 4);
+        const laCoords = [34.052235, -118.243683];
+        
+        mapRef.current = L.map('map').setView(laCoords, 10);
+        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors'
         }).addTo(mapRef.current);
+        
+        L.marker(laCoords)
+          .addTo(mapRef.current)
+          .bindPopup('Los Angeles, CA')
+          .openPopup();
       }
     };
 
@@ -49,6 +57,5 @@ export default function Map() {
       </div>
       <Footer />
     </div>
-
   );
 }
