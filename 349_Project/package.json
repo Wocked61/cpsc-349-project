@@ -1,5 +1,5 @@
 {
-  "homepage": "https://Wocked61.github.io/349Project/src/Home.jsx",
+  "homepage": "https://Wocked61.github.io/349 Project/src/Home.jsx",
   "name": "349-project",
   "private": true,
   "version": "0.0.0",
@@ -9,7 +9,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && cp -r src/Home.jsx dist",
+    "postinstall": "npm install --force",
+    "prestart": "npm run build && cp -r src/Home.jsx dist",
+    "start": "vite preview",
+    "poststart": "npm run build && cp -r src/Home.jsx dist",
+    "postbuild": "npm run build && cp -r src/Home.jsx dist",
+    "postpreview": "npm run build && cp -r src/Home.jsx dist",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
