@@ -56,6 +56,5 @@ export default function Map() {
       </div>
       <Footer />
     </div>
-
   );
 }
