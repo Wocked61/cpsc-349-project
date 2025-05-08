@@ -12,6 +12,33 @@ function Convert() {
   const [use24Hour, setUse24Hour] = useState(false);
   const [convertedTime, setConvertedTime] = useState("");
 
+  const timeZones = {
+    "America/New_York": { label: "New York (EST/EDT)", offset: -240 },
+    "America/Los_Angeles": { label: "Los Angeles (PST/PDT)", offset: -420 },
+    "America/Chicago": { label: "Chicago (CST/CDT)", offset: -300 },
+    "America/Denver": { label: "Denver (MST/MDT)", offset: -360 },
+    "America/Phoenix": { label: "Phoenix (MST, no DST)", offset: -420 },
+    "America/Anchorage": { label: "Anchorage (AKST/AKDT)", offset: -480 },
+    "America/Honolulu": { label: "Honolulu (HST)", offset: -600 },
+    "America/Toronto": { label: "Toronto (EST/EDT)", offset: -240 },
+    "America/Vancouver": { label: "Vancouver (PST/PDT)", offset: -420 },
+    "America/Mexico_City": { label: "Mexico City (CST/CDT)", offset: -300 },
+    "Europe/London": { label: "London (GMT/BST)", offset: 60 },
+    "Europe/Paris": { label: "Paris (CET/CEST)", offset: 120 },
+    "Europe/Berlin": { label: "Berlin (CET/CEST)", offset: 120 },
+    "Europe/Rome": { label: "Rome (CET/CEST)", offset: 120 },
+    "Europe/Madrid": { label: "Madrid (CET/CEST)", offset: 120 },
+    "Asia/Tokyo": { label: "Tokyo (JST)", offset: 540 },
+    "Asia/Shanghai": { label: "Shanghai (CST)", offset: 480 },
+    "Asia/Singapore": { label: "Singapore (SGT)", offset: 480 },
+    "Asia/Dubai": { label: "Dubai (GST)", offset: 240 },
+    "Asia/Seoul": { label: "Seoul (KST)", offset: 540 },
+    "Asia/Kolkata": { label: "New Delhi (IST)", offset: 330 },
+    "Australia/Sydney": { label: "Sydney (AEST/AEDT)", offset: 600 },
+    "Australia/Perth": { label: "Perth (AWST)", offset: 480 },
+    "Pacific/Auckland": { label: "Auckland (NZST/NZDT)", offset: 720 }
+  };
+
   const handleConvert = () => {
     if (!dateOnly || hour === "" || minute === "") {
       alert("Please provide valid date and time.");
@@ -36,16 +63,8 @@ function Convert() {
       if (amOrPm === "AM" && adjustedHour === 12) adjustedHour = 0;
     }
 
-    // Time zone offset map (in minutes)
-    const timeZoneOffsets = {
-      "America/New_York": -240,       // UTC-4 (EDT)
-      "America/Los_Angeles": -420,    // UTC-7 (PDT)
-      "Europe/London": 60,            // UTC+1 (BST)
-      "Asia/Tokyo": 540               // UTC+9
-    };
-
-    const fromOffset = timeZoneOffsets[fromZone];
-    const toOffset = timeZoneOffsets[toZone];
+    const fromOffset = timeZones[fromZone].offset;
+    const toOffset = timeZones[toZone].offset;
     const offsetDiff = toOffset - fromOffset; // in minutes
 
     const inputDate = new Date(`${dateOnly}T${String(adjustedHour).padStart(2, "0")}:${String(adjustedMinute).padStart(2, "0")}:00`);
@@ -76,17 +95,15 @@ function Convert() {
           <div className="timezone-row inline-dropdowns">
             <span className="inline-label">Convert</span>
             <select value={fromZone} onChange={(e) => setFromZone(e.target.value)}>
-              <option value="America/New_York">New York (EST)</option>
-              <option value="America/Los_Angeles">Los Angeles (PST)</option>
-              <option value="Europe/London">London (GMT)</option>
-              <option value="Asia/Tokyo">Tokyo (JST)</option>
+              {Object.entries(timeZones).map(([key, { label }]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
             </select>
             <span className="inline-label">to</span>
             <select value={toZone} onChange={(e) => setToZone(e.target.value)}>
-              <option value="America/New_York">New York (EST)</option>
-              <option value="America/Los_Angeles">Los Angeles (PST)</option>
-              <option value="Europe/London">London (GMT)</option>
-              <option value="Asia/Tokyo">Tokyo (JST)</option>
+              {Object.entries(timeZones).map(([key, { label }]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
             </select>
           </div>
         </div>

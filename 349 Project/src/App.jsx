@@ -9,6 +9,7 @@ const App = () => {
   const [timeData, setTimeData] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [localTime, setLocalTime] = useState("");
+  const [backgroundClass, setBackgroundClass] = useState("default-bg");
 
   useEffect(() => {
     if (geo) {
@@ -26,6 +27,62 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (weatherData) {
+      setBackgroundByWeather(
+        weatherData.list[0].weather[0].main,
+        weatherData.list[0].main.temp,
+        weatherData.list[0].weather[0].icon
+      );
+    }
+  }, [weatherData]);
+
+  // Function to set background class based on weather condition
+  const setBackgroundByWeather = (condition, temperature, icon) => {
+    const isNight = icon.includes("n");
+
+    if (isNight) {
+      setBackgroundClass("night-bg");
+      return;
+    }
+
+    if (
+      condition.toLowerCase().includes("rain") ||
+      condition.toLowerCase().includes("drizzle")
+    ) {
+      setBackgroundClass("rainy-bg");
+      return;
+    }
+
+    if (
+      condition.toLowerCase().includes("clear") ||
+      condition.toLowerCase().includes("sun")
+    ) {
+      if (temperature > 28) {
+        // Temperature threshold for "hot" in Celsius
+        setBackgroundClass("hot-bg");
+      } else {
+        setBackgroundClass("sunny-bg");
+      }
+      return;
+    }
+
+    if (
+      condition.toLowerCase().includes("cloud") ||
+      condition.toLowerCase().includes("overcast")
+    ) {
+      setBackgroundClass("cloudy-bg");
+      return;
+    }
+
+    if (condition.toLowerCase().includes("snow")) {
+      setBackgroundClass("snow-bg");
+      return;
+    }
+
+    // Default background
+    setBackgroundClass("default-bg");
+  };
 
   const fetchWeather = async (location, forecastDays) => {
     const apiKey = "9c1bcf57b8d6f8fb40fbd283fd3dd3c1";
@@ -101,101 +158,103 @@ const App = () => {
   const inputCity = query.get("city");
   const geo = query.get("geo") === "true";
 
-
   return (
-    <div className="App">
-      <div class="center-wrapper">
+    <div className={`App ${backgroundClass}`}>
+      <div className="center-wrapper">
         <main className="dashboard-layout">
-                <div className="left-panel">
-                  <div className="search-area">
-                    <label>
-                      <strong>Enter a City Name or Zip Code</strong>
-                    </label>
-                    <input
-                      type="text"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      placeholder="E.g., New York, London, 90210"
-                    />
-                    <label>
-                      <strong>Select Forecast Days</strong>
-                    </label>
-                    <select
-                      value={days}
-                      onChange={(e) => setDays(Number(e.target.value))}
-                    >
-                      <option value={5}>5 Days</option>
-                      <option value={7}>7 Days</option>
-                    </select>
-                    <button className="search" onClick={() => fetchWeather(city, days)}>
-                      Search
-                    </button>
-                    <hr />
-                    <button
-                      className="current-location"
-                      onClick={handleCurrentLocation}
-                    >
-                      Use Current Location
-                    </button>
+          <div className="left-panel">
+            <div className="search-area">
+              <label>
+                <strong>Enter a City Name or Zip Code</strong>
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="E.g., New York, London, 90210"
+              />
+              <label>
+                <strong>Select Forecast Days</strong>
+              </label>
+              <select
+                value={days}
+                onChange={(e) => setDays(Number(e.target.value))}
+              >
+                <option value={5}>5 Days</option>
+                <option value={7}>7 Days</option>
+              </select>
+              <button
+                className="search"
+                onClick={() => fetchWeather(city, days)}
+              >
+                Search
+              </button>
+              <hr />
+              <button
+                className="current-location"
+                onClick={handleCurrentLocation}
+              >
+                Use Current Location
+              </button>
+            </div>
+            {timeData && (
+              <>
+                <div className="info-box">Local Time: {localTime}</div>
+                <div className="info-box">Timezone: {timeData.zoneName}</div>
+              </>
+            )}
+          </div>
+
+          <div className="right-panel">
+            {weatherData && (
+              <>
+                <div className="weather-card">
+                  <h3>Today</h3>
+                  <div>
+                    <div className="bold">{weatherData.city.name}</div>
+                    <div>Temperature: {weatherData.list[0].main.temp}°C</div>
+                    <div>Wind: {weatherData.list[0].wind.speed} M/S</div>
+                    <div>Humidity: {weatherData.list[0].main.humidity}%</div>
                   </div>
-                  {timeData && (
-                    <>
-                      <div className="info-box">Local Time: {localTime}</div>
-                      <div className="info-box">Timezone: {timeData.zoneName}</div>
-                    </>
-                  )}
+                  <div>
+                    {weatherData.list[0].weather[0].description}{" "}
+                    {getIconLabel(weatherData.list[0].weather[0].icon)}
+                    <br />
+                    <img
+                      src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@2x.png`}
+                      alt="icon"
+                    />
+                  </div>
                 </div>
 
-                <div className="right-panel">
-                  {weatherData && (
-                    <>
-                      <div className="weather-card">
-                        <h3>Today</h3>
+                <h2>Forecast</h2>
+                <div className="forecast">
+                  {Array.from(
+                    { length: days - 1 },
+                    (_, i) => weatherData.list[(i + 1) * 8]
+                  ).map((forecast, idx) =>
+                    forecast ? (
+                      <div className="forecast-day" key={idx}>
+                        <div>({forecast.dt_txt.split(" ")[0]})</div>
                         <div>
-                          <div className="bold">{weatherData.city.name}</div>
-                          <div>Temperature: {weatherData.list[0].main.temp}°C</div>
-                          <div>Wind: {weatherData.list[0].wind.speed} M/S</div>
-                          <div>Humidity: {weatherData.list[0].main.humidity}%</div>
+                          {forecast.weather[0].description}{" "}
+                          {getIconLabel(forecast.weather[0].icon)}
                         </div>
-                        <div>
-                          {weatherData.list[0].weather[0].description}{" "}
-                          {getIconLabel(weatherData.list[0].weather[0].icon)}
-                          <br />
-                          <img
-                            src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@2x.png`}
-                            alt="icon"
-                          />
-                        </div>
+                        <img
+                          src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
+                          alt="icon"
+                        />
+                        <div>Temp: {forecast.main.temp}°C</div>
+                        <div>Wind: {forecast.wind.speed} M/S</div>
+                        <div>Humidity: {forecast.main.humidity}%</div>
                       </div>
-
-                      <h2>Forecast</h2>
-                      <div className="forecast">
-                        {Array.from(
-                          { length: days - 1 },
-                          (_, i) => weatherData.list[(i + 1) * 8]
-                        ).map((forecast, idx) =>
-                          forecast ? (
-                            <div className="forecast-day" key={idx}>
-                              <div>({forecast.dt_txt.split(" ")[0]})</div>
-                              <div>
-                                {forecast.weather[0].description}{" "}
-                                {getIconLabel(forecast.weather[0].icon)}
-                              </div>
-                              <img
-                                src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
-                                alt="icon"
-                              />
-                              <div>Temp: {forecast.main.temp}°C</div>
-                              <div>Wind: {forecast.wind.speed} M/S</div>
-                              <div>Humidity: {forecast.main.humidity}%</div>
-                            </div>
-                          ) : null
-                        )}
-                      </div>
-                    </>
+                    ) : null
                   )}
                 </div>
-              </main>
+              </>
+            )}
+          </div>
+        </main>
       </div>
       <Footer />
     </div>

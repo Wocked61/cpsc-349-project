@@ -12,6 +12,38 @@ body {
   padding-bottom: 100px;
 }
 
+.App {
+  min-height: 100vh;
+}
+
+.default-bg {
+  background: linear-gradient(135deg, #3a8ae0, #00c6d8);
+}
+
+.sunny-bg {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.hot-bg {
+  background: linear-gradient(135deg, #ff9a44, #fc6076);
+}
+
+.rainy-bg {
+  background: linear-gradient(135deg, #1c3d5c, #2e6b8d);
+}
+
+.cloudy-bg {
+  background: linear-gradient(135deg, #606c88, #3f4c6b);
+}
+
+.snow-bg {
+  background: linear-gradient(135deg, #e6e6e6, #b3cde0);
+}
+
+.night-bg {
+  background: linear-gradient(135deg, #0f2027, #203a43);
+}
+
 /* Header Styles */
 .navbar {
   position: sticky;
