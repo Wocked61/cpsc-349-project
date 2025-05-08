@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 
 function Header() {
-  const [currentPage, setCurrentPage] = useState('Home');
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const path = window.location.pathname;
-    switch (path) {
+  const location = useLocation();
+  
+  const getPageTitle = () => {
+    switch (location.pathname) {
       case '/':
-        setCurrentPage('Home');
-        break;
+        return 'Home';
       case '/App':
-        setCurrentPage('TimeZones');
-        break;
+        return 'TimeZones';
       case '/Map':
-        setCurrentPage('Map');
-        break;
+        return 'Map';
       case '/Convert':
-        setCurrentPage('Convert Time');
-        break;
+        return 'Convert Time';
       default:
-        setCurrentPage('Home');
+        return 'Home';
     }
-  }, []);
-
-  const navigate = (path) => {
-    window.location.href = path;
   };
 
   const toggleMenu = () => {
@@ -36,10 +28,10 @@ function Header() {
   return (
     <header className="navbar">
       <div className="logo">
-        <a onClick={() => navigate('/')}>
-          <img src="/weather_logo2.png" alt="logo" />
-          <h1>Regional Cloud - {currentPage}</h1>
-        </a>
+        <Link to="/">
+          <img src="weather_logo2.png" alt="logo" />
+          <h1>Regional Cloud - {getPageTitle()}</h1>
+        </Link>
       </div>
       <button
         className="toggle_btn"
@@ -49,10 +41,10 @@ function Header() {
         ☰
       </button>
       <ul className={`menu ${menuOpen ? "open" : ""}`}>
-        <li><a onClick={() => navigate('/')} style={{cursor: 'pointer'}}>Home</a></li>
-        <li><a onClick={() => navigate('/App')} style={{cursor: 'pointer'}}>TimeZones</a></li>
-        <li><a onClick={() => navigate('/Map')} style={{cursor: 'pointer'}}>Map</a></li>
-        <li><a onClick={() => navigate('/Convert')} style={{cursor: 'pointer'}}>Convert Time</a></li>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/App">TimeZones</Link></li>
+        <li><Link to="/Map">Map</Link></li>
+        <li><Link to="/Convert">Convert Time</Link></li>
       </ul>
     </header>
   );

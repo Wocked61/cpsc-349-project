@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Home.jsx';
 import App from './App.jsx';
 import Map from './Map.jsx';
@@ -8,28 +9,17 @@ import Header from './Header.jsx';
 import './index.css';
 
 function MainApp() {
-  const pathname = window.location.pathname;
-  
-  const renderComponent = () => {
-    switch (pathname) {
-      case '/':
-        return <Home />;
-      case '/App':
-        return <App />;
-      case '/Map':
-        return <Map />;
-      case '/Convert':
-        return <Convert />;
-      default:
-        return <Home />;
-    }
-  };
-
   return (
-    <>
+    <HashRouter>
       <Header />
-      {renderComponent()}
-    </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/App" element={<App />} />
+        <Route path="/Map" element={<Map />} />
+        <Route path="/Convert" element={<Convert />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </HashRouter>
   );
 }
 

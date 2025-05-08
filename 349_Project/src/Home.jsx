@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./Home.css";
 import Footer from "./Footer";
 
@@ -7,6 +8,7 @@ function Home() {
   const [la, setLa] = useState({ temp: "", time: "", icon: "" });
   const [ny, setNy] = useState({ temp: "", time: "", icon: "" });
   const [backgroundIndex, setBackgroundIndex] = useState(0);
+  const navigate = useNavigate();
   
   const backgroundImages = [
     "https://images.pexels.com/photos/186980/pexels-photo-186980.jpeg?cs=srgb&dl=pexels-tahir-shaw-50609-186980.jpg&fm=jpg",
@@ -63,7 +65,7 @@ function Home() {
 
   const handleSearch = () => {
     if (searchInput.trim()) {
-      window.location.href = `/App?city=${encodeURIComponent(searchInput.trim())}`;
+      navigate(`/App?city=${encodeURIComponent(searchInput.trim())}`);
     }
   };
 
@@ -72,7 +74,7 @@ function Home() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          window.location.href = `/App?lat=${latitude}&lon=${longitude}`;
+          navigate(`/App?lat=${latitude}&lon=${longitude}`);
         },
         (error) => {
           console.error("Error getting location:", error);
