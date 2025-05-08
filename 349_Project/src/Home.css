@@ -1,0 +1,172 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: darkgrey;
+}
+
+main {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+main.compact {
+  min-height: 60vh;
+  padding: 10px;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.text {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.box {
+  width: 700px;
+  padding: 5rem;
+}
+
+.container {
+  justify-content: left;
+  height: 100vh;
+}
+
+/* New styles from other branch */
+.main-content-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+  flex-wrap: wrap;
+  padding: 20px 10px;
+}
+
+.weather-box {
+  background-color: #5f646a;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  width: 150px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.weather-box img {
+  width: 60px;
+  height: 60px;
+  margin: 5px 0;
+}
+
+.weather-box h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.weather-box p {
+  margin: 5px 0;
+}
+
+.center-search {
+  text-align: center;
+  max-width: 400px;
+}
+
+.home-intro {
+  font-size: 1rem;
+  color: #f0f0f0;
+  margin: 15px 0;
+}
+
+.search-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-bottom: 10px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.search-btn,
+.location-btn {
+  width: 48%;
+  padding: 8px;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.search-btn:hover,
+.location-btn:hover {
+  background-color: #4b6fd3;
+}
+
+.divider-line {
+  width: 100px;
+  height: 1px;
+  background-color: #ccc;
+  margin: 10px 0;
+}
+
+h4 {
+  font-size: 2rem;
+  color: #f0f0f0;
+  margin-bottom: 10px;
+}
+
+.blurred-bg {
+  position: relative;
+}
+
+.blurred-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: blur(5px);
+  z-index: 0;
+}
+
+.blurred-bg > * {
+  position: relative;
+  z-index: 1;
+}
