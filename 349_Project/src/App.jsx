@@ -11,11 +11,15 @@ const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [localTime, setLocalTime] = useState("");
   const [backgroundClass, setBackgroundClass] = useState("default-bg");
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState({ lat: 34.0522, lon: -118.2437, name: "Los Angeles", temp: 75, description: "clear sky", icon: "01d" });
   const [searchHistory, setSearchHistory] = useState([]);
   const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const inputCity = query.get("city");
+    const geo = query.get("geo") === "true";
+    
     if (geo) {
       handleCurrentLocation();
     } else if (inputCity) {
@@ -99,7 +103,7 @@ const App = () => {
       const data = await res.json();
       if (data.cod !== "200") {
         alert("City or ZIP not found. Please try again.");
-        return false; // Return false on failure
+        return false;
       }
       setWeatherData(data);
       
@@ -171,23 +175,89 @@ const App = () => {
 
   const handleCurrentLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-        const res = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords.latitude}&longitude=${coords.longitude}&localityLanguage=en`
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords }) => {
+          try {
+            const res = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords.latitude}&longitude=${coords.longitude}&localityLanguage=en`
+            );
+            const data = await res.json();
+            
+            if (data && data.city) {
+              fetchWeather(data.city, days);
+            } else {
+              fetchWeatherByCoords(coords.latitude, coords.longitude);
+            }
+          } catch (error) {
+            console.error("Error in reverse geocoding:", error);
+            fetchWeatherByCoords(coords.latitude, coords.longitude);
+          }
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          alert("Unable to get your location. Please make sure location services are enabled in your browser.");
+        },
+        { timeout: 10000, enableHighAccuracy: true }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
+  const fetchWeatherByCoords = async (lat, lon) => {
+    const apiKey = "9c1bcf57b8d6f8fb40fbd283fd3dd3c1";
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      
+      if (data.cod !== "200") {
+        alert("Unable to get weather for your location. Please try searching by city name.");
+        return false;
+      }
+      
+      setWeatherData(data);
+      
+      const newLocation = {
+        lat: data.city.coord.lat,
+        lon: data.city.coord.lon,
+        name: data.city.name,
+        temp: data.list[0].main.temp,
+        description: data.list[0].weather[0].description,
+        icon: data.list[0].weather[0].icon
+      };
+      
+      setCurrentLocation(newLocation);
+      setCity("");
+      
+      setSearchHistory(prevHistory => {
+        const locationExists = prevHistory.some(item => 
+          item.name === newLocation.name
         );
-        const data = await res.json();
-        fetchWeather(data.city, days);
+        
+        if (!locationExists) {
+          if (prevHistory.length >= 5) {
+            return [...prevHistory.slice(1), newLocation];
+          }
+          return [...prevHistory, newLocation];
+        }
+      
+        return prevHistory;
       });
+      
+      await fetchTime(data.city.coord.lat, data.city.coord.lon);
+      return true;
+    } catch (err) {
+      console.error("Error fetching weather by coordinates:", err);
+      alert("Network error or invalid response.");
+      return false;
     }
   };
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
-
-  const query = new URLSearchParams(window.location.search);
-  const inputCity = query.get("city");
-  const geo = query.get("geo") === "true";
 
   return (
     <div className={`App ${backgroundClass}`}>
@@ -230,26 +300,7 @@ const App = () => {
               <hr />
               <button 
                 className="toggle-map" 
-                onClick={async () => {
-                  if (showMap) {
-                    setShowMap(false);
-                  } else {
-
-                    if (!currentLocation) {
-                      try {
-                        const success = await fetchWeather("Los Angeles", days);
-                        if (success) {
-                          setShowMap(true);
-                        }
-                      } catch (error) {
-                        console.error("Error fetching default location:", error);
-                        alert("Couldn't load default location. Please try again.");
-                      }
-                    } else {
-                      setShowMap(true);
-                    }
-                  }
-                }}
+                onClick={() => setShowMap(!showMap)}
               >
                 {showMap ? "Hide Map" : "Show Map"}
               </button>
