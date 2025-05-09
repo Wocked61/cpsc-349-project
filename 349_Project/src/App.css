@@ -160,8 +160,16 @@ body {
   background-color: #5d82e6;
 }
 
+
+.search:hover {
+  background-color: #4a6bbf;
+}
+
 .current-location {
-  background-color: #5f646a;
+  background-color: #5d82e6;
+}
+.current-location:hover {
+  background-color: #4a6bbf;
 }
 
 /* Info Boxes */
@@ -185,7 +193,7 @@ body {
 .dashboard-layout {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 20rem;
   padding: 20px;
   min-height: calc(100vh - 160px);
   justify-content: center;
@@ -201,6 +209,7 @@ body {
   .left-panel {
     flex: 1;
     max-width: 400px;
+    align-items: left;
   }
 
   .right-panel {
@@ -243,34 +252,40 @@ body {
   text-align: center;
 }
 
-/* Footer */
-footer {
-  background-color: #6c63ff;
+
+.toggle-map{
+  background-color: #5d82e6;
   color: white;
-  text-align: center;
-  padding: 20px 10px;
-  position: relative;
-  margin-top: 50px;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.footer-contact {
-  font-size: 1.2em;
-  margin-bottom: 10px;
+.toggle-map:hover {
+  background-color: #4a6bbf;
 }
 
-.footer-icons a {
-  margin: 0 10px;
+.history-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+
+.history-item {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+
+.white{
   color: white;
-  font-size: 1.2em;
-  transition: color 0.3s ease;
-}
-
-.footer-icons a:hover {
-  color: #ddd;
-}
-
-.footer-credit {
-  margin-top: 10px;
-  font-size: 0.9em;
+  font-size: 1.2rem;
 }

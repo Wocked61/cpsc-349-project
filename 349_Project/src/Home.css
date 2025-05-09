@@ -3,6 +3,9 @@ body {
   margin: 0;
   padding: 0;
   background-color: darkgrey;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 main {
@@ -169,4 +172,8 @@ h4 {
 .blurred-bg > * {
   position: relative;
   z-index: 1;
+}
+
+footer {
+  margin-top: auto;
 }
