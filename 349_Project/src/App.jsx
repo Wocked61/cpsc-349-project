@@ -8,7 +8,6 @@ const App = () => {
   const [days, setDays] = useState(5);
   const [weatherData, setWeatherData] = useState(null);
   const [timeData, setTimeData] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [localTime, setLocalTime] = useState("");
   const [backgroundClass, setBackgroundClass] = useState("default-bg");
   const [currentLocation, setCurrentLocation] = useState({ lat: 34.0522, lon: -118.2437, name: "Los Angeles", temp: 75, description: "clear sky", icon: "01d" });
@@ -277,13 +276,6 @@ const App = () => {
               <label>
                 <p className="white">Select Forecast Days</p>
               </label>
-              <select
-                value={days}
-                onChange={(e) => setDays(Number(e.target.value))}
-              >
-                <option value={5}>5 Days</option>
-                <option value={7}>7 Days</option>
-              </select>
               <button
                 className="search"
                 onClick={() => fetchWeather(city, days)}
