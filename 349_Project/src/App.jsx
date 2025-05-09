@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Footer from "./Footer";
+import Map from "./Map";
 
 const App = () => {
   const [city, setCity] = useState("");
@@ -10,6 +11,8 @@ const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [localTime, setLocalTime] = useState("");
   const [backgroundClass, setBackgroundClass] = useState("default-bg");
+  const [coordinates, setCoordinates] = useState(null);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     if (geo) {
@@ -58,8 +61,7 @@ const App = () => {
       condition.toLowerCase().includes("clear") ||
       condition.toLowerCase().includes("sun")
     ) {
-      if (temperature > 28) {
-        // Temperature threshold for "hot" in Celsius
+      if (temperature > 82) {
         setBackgroundClass("hot-bg");
       } else {
         setBackgroundClass("sunny-bg");
@@ -88,9 +90,9 @@ const App = () => {
     const apiKey = "9c1bcf57b8d6f8fb40fbd283fd3dd3c1";
     let url = "";
     if (/^\d{5}$/.test(location)) {
-      url = `https://api.openweathermap.org/data/2.5/forecast?zip=${location},US&appid=${apiKey}&units=metric`;
+      url = `https://api.openweathermap.org/data/2.5/forecast?zip=${location},US&appid=${apiKey}&units=imperial`;
     } else {
-      url = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}&units=metric`;
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}&units=imperial`;
     }
 
     try {
@@ -101,6 +103,12 @@ const App = () => {
         return;
       }
       setWeatherData(data);
+      // Store the coordinates for the map
+      setCoordinates({
+        lat: data.city.coord.lat,
+        lon: data.city.coord.lon,
+        name: data.city.name
+      });
       fetchTime(data.city.coord.lat, data.city.coord.lon);
     } catch (err) {
       console.error(err);
@@ -196,6 +204,13 @@ const App = () => {
               >
                 Use Current Location
               </button>
+              <hr />
+              <button 
+                className="toggle-map" 
+                onClick={() => setShowMap(!showMap)}
+              >
+                {showMap ? "Hide Map" : "Show Map"}
+              </button>
             </div>
             {timeData && (
               <>
@@ -206,52 +221,56 @@ const App = () => {
           </div>
 
           <div className="right-panel">
-            {weatherData && (
-              <>
-                <div className="weather-card">
-                  <h3>Today</h3>
-                  <div>
-                    <div className="bold">{weatherData.city.name}</div>
-                    <div>Temperature: {weatherData.list[0].main.temp}°C</div>
-                    <div>Wind: {weatherData.list[0].wind.speed} M/S</div>
-                    <div>Humidity: {weatherData.list[0].main.humidity}%</div>
+            {showMap ? (
+              <Map searchLocation={coordinates} />
+            ) : (
+              weatherData && (
+                <>
+                  <div className="weather-card">
+                    <h3>Today</h3>
+                    <div>
+                      <div className="bold">{weatherData.city.name}</div>
+                      <div>Temperature: {weatherData.list[0].main.temp} °F</div>
+                      <div>Wind: {weatherData.list[0].wind.speed} MPH</div>
+                      <div>Humidity: {weatherData.list[0].main.humidity}%</div>
+                    </div>
+                    <div>
+                      {weatherData.list[0].weather[0].description}{" "}
+                      {getIconLabel(weatherData.list[0].weather[0].icon)}
+                      <br />
+                      <img
+                        src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@2x.png`}
+                        alt="icon"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    {weatherData.list[0].weather[0].description}{" "}
-                    {getIconLabel(weatherData.list[0].weather[0].icon)}
-                    <br />
-                    <img
-                      src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@2x.png`}
-                      alt="icon"
-                    />
-                  </div>
-                </div>
 
-                <h2>Forecast</h2>
-                <div className="forecast">
-                  {Array.from(
-                    { length: days - 1 },
-                    (_, i) => weatherData.list[(i + 1) * 8]
-                  ).map((forecast, idx) =>
-                    forecast ? (
-                      <div className="forecast-day" key={idx}>
-                        <div>({forecast.dt_txt.split(" ")[0]})</div>
-                        <div>
-                          {forecast.weather[0].description}{" "}
-                          {getIconLabel(forecast.weather[0].icon)}
+                  <h2>Forecast</h2>
+                  <div className="forecast">
+                    {Array.from(
+                      { length: days - 1 },
+                      (_, i) => weatherData.list[(i + 1) * 8]
+                    ).map((forecast, idx) =>
+                      forecast ? (
+                        <div className="forecast-day" key={idx}>
+                          <div>({forecast.dt_txt.split(" ")[0]})</div>
+                          <div>
+                            {forecast.weather[0].description}{" "}
+                            {getIconLabel(forecast.weather[0].icon)}
+                          </div>
+                          <img
+                            src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
+                            alt="icon"
+                          />
+                          <div>Temp: {forecast.main.temp} °F</div>
+                          <div>Wind: {forecast.wind.speed} MPH</div>
+                          <div>Humidity: {forecast.main.humidity}%</div>
                         </div>
-                        <img
-                          src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
-                          alt="icon"
-                        />
-                        <div>Temp: {forecast.main.temp}°C</div>
-                        <div>Wind: {forecast.wind.speed} M/S</div>
-                        <div>Humidity: {forecast.main.humidity}%</div>
-                      </div>
-                    ) : null
-                  )}
-                </div>
-              </>
+                      ) : null
+                    )}
+                  </div>
+                </>
+              )
             )}
           </div>
         </main>

@@ -2,21 +2,25 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Map.css";
 import Footer from "./Footer";
 
-//this API doesnt need a key use the link below to get the information
-// the documentation is in this link https://leafletjs.com/examples/quick-start/
-
-
-export default function Map() {
+export default function Map({ searchLocation }) {
   const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  
+  const defaultCoords = [34.052235, -118.243683];
 
   useEffect(() => {
-    // Create map instance after Leaflet is loaded
     const initMap = () => {
       if (!mapRef.current) {
-        mapRef.current = L.map('map').setView([40, -95], 4);
+        mapRef.current = L.map('map').setView(defaultCoords, 10);
+        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors'
         }).addTo(mapRef.current);
+        
+        markerRef.current = L.marker(defaultCoords)
+          .addTo(mapRef.current)
+          .bindPopup('Los Angeles, CA')
+          .openPopup();
       }
     };
 
@@ -42,6 +46,23 @@ export default function Map() {
     };
   }, []);
 
+  useEffect(() => {
+    if (mapRef.current && searchLocation && searchLocation.lat && searchLocation.lon) {
+      // Remove previous marker
+      if (markerRef.current) {
+        mapRef.current.removeLayer(markerRef.current);
+      }
+      
+      const newCoords = [searchLocation.lat, searchLocation.lon];
+      markerRef.current = L.marker(newCoords)
+        .addTo(mapRef.current)
+        .bindPopup(searchLocation.name || 'Searched Location')
+        .openPopup();
+      
+      mapRef.current.setView(newCoords, 10);
+    }
+  }, [searchLocation]);
+
   return (
     <div>
       <div className="map-container">
@@ -49,6 +70,5 @@ export default function Map() {
       </div>
       <Footer />
     </div>
-
   );
 }

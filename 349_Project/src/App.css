@@ -274,3 +274,12 @@ footer {
   margin-top: 10px;
   font-size: 0.9em;
 }
+
+.toggle-map{
+  background-color: #5d82e6;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

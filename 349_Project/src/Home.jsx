@@ -5,9 +5,10 @@ import Footer from "./Footer";
 
 function Home() {
   const [searchInput, setSearchInput] = useState("");
-  const [la, setLa] = useState({ temp: "", time: "", icon: "" });
-  const [ny, setNy] = useState({ temp: "", time: "", icon: "" });
+  const [la, setLa] = useState({ temp: "", tempF: "", time: "", icon: "" });
+  const [ny, setNy] = useState({ temp: "", tempF: "", time: "", icon: "" });
   const [backgroundIndex, setBackgroundIndex] = useState(0);
+  const [tempUnit, setTempUnit] = useState("F"); // Default to Fahrenheit for Americans
   const navigate = useNavigate();
   
   const backgroundImages = [
@@ -33,8 +34,9 @@ function Home() {
 
     const fetchCityData = async (city, setter) => {
       try {
+        // Request data in imperial units (Fahrenheit)
         const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`
         );
         const data = await res.json();
 
@@ -50,7 +52,8 @@ function Home() {
         }).format(new Date());
 
         setter({
-          temp: data.main.temp.toFixed(1),
+          temp: ((data.main.temp - 32) * 5/9).toFixed(1), // Convert F to C for storage
+          tempF: data.main.temp.toFixed(1),
           icon: data.weather[0].icon,
           time: currentTime,
         });
@@ -87,18 +90,16 @@ function Home() {
     }
   };
 
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     
     if (params.has('lat') && params.has('lon')) {
       const lat = params.get('lat');
       const lon = params.get('lon');
-      
-      fetchWeatherByCoords(lat, lon);
     } 
     else if (params.has('city')) {
       const city = params.get('city');
-      fetchWeatherByCity(city);
     }
   }, []);
 
@@ -117,7 +118,7 @@ function Home() {
           <div className="weather-box">
             <h3>Los Angeles</h3>
             <img src={`https://openweathermap.org/img/wn/${la.icon}@2x.png`} alt="Weather icon" />
-            <p>{la.temp} °C</p>
+            <p>{la.tempF} °F</p>
             <p>Time: {la.time}</p>
           </div>
 
@@ -134,16 +135,18 @@ function Home() {
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Enter a city or ZIP code..."
               />
-              <button className="search-btn" onClick={handleSearch}>Search</button>
+              <div className="button-group">
+                <button className="search-btn" onClick={handleSearch}>Search</button>
+                <button className="location-btn" onClick={handleGeo}>Use My Location</button>
+              </div>
               <div className="divider-line"></div>
-              <button className="location-btn" onClick={handleGeo}>Use My Location</button>
             </div>
           </div>
 
           <div className="weather-box">
             <h3>New York</h3>
             <img src={`https://openweathermap.org/img/wn/${ny.icon}@2x.png`} alt="Weather icon" />
-            <p>{ny.temp} °C</p>
+          <p>{ny.tempF} °F</p>
             <p>Time: {ny.time}</p>
           </div>
         </div>
