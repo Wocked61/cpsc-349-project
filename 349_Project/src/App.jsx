@@ -11,7 +11,8 @@ const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [localTime, setLocalTime] = useState("");
   const [backgroundClass, setBackgroundClass] = useState("default-bg");
-  const [coordinates, setCoordinates] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [searchHistory, setSearchHistory] = useState([]);
   const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,6 @@ const App = () => {
     }
   }, [weatherData]);
 
-  // Function to set background class based on weather condition
   const setBackgroundByWeather = (condition, temperature, icon) => {
     const isNight = icon.includes("n");
 
@@ -82,7 +82,6 @@ const App = () => {
       return;
     }
 
-    // Default background
     setBackgroundClass("default-bg");
   };
 
@@ -103,12 +102,33 @@ const App = () => {
         return;
       }
       setWeatherData(data);
-      // Store the coordinates for the map
-      setCoordinates({
+      
+      const newLocation = {
         lat: data.city.coord.lat,
         lon: data.city.coord.lon,
-        name: data.city.name
+        name: data.city.name,
+        temp: data.list[0].main.temp,
+        description: data.list[0].weather[0].description,
+        icon: data.list[0].weather[0].icon
+      };
+      
+      setCurrentLocation(newLocation);
+      
+      setSearchHistory(prevHistory => {
+        const locationExists = prevHistory.some(item => 
+          item.name === newLocation.name
+        );
+        
+        if (!locationExists) {
+          if (prevHistory.length >= 5) {
+            return [...prevHistory.slice(1), newLocation];
+          }
+          return [...prevHistory, newLocation];
+        }
+      
+        return prevHistory;
       });
+      
       fetchTime(data.city.coord.lat, data.city.coord.lon);
     } catch (err) {
       console.error(err);
@@ -173,7 +193,7 @@ const App = () => {
           <div className="left-panel">
             <div className="search-area">
               <label>
-                <strong>Enter a City Name or Zip Code</strong>
+                <p className="white">Enter a City Name or Zip Code</p>
               </label>
               <input
                 type="text"
@@ -182,7 +202,7 @@ const App = () => {
                 placeholder="E.g., New York, London, 90210"
               />
               <label>
-                <strong>Select Forecast Days</strong>
+                <p className="white">Select Forecast Days</p>
               </label>
               <select
                 value={days}
@@ -211,6 +231,24 @@ const App = () => {
               >
                 {showMap ? "Hide Map" : "Show Map"}
               </button>
+              
+              {searchHistory.length > 0 && (
+                <div className="search-history">
+                  <hr />
+                  <h4>Recent Searches</h4>
+                  <div className="history-items">
+                    {searchHistory.map((location, index) => (
+                      <div 
+                        key={index} 
+                        className="history-item"
+                        onClick={() => fetchWeather(location.name, days)}
+                      >
+                        {location.name} ({location.temp.toFixed(1)}°F)
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             {timeData && (
               <>
@@ -222,7 +260,7 @@ const App = () => {
 
           <div className="right-panel">
             {showMap ? (
-              <Map searchLocation={coordinates} />
+              <Map currentLocation={currentLocation} searchHistory={searchHistory} />
             ) : (
               weatherData && (
                 <>
@@ -245,7 +283,7 @@ const App = () => {
                     </div>
                   </div>
 
-                  <h2>Forecast</h2>
+                  <h2 className="white">Forecast</h2>
                   <div className="forecast">
                     {Array.from(
                       { length: days - 1 },

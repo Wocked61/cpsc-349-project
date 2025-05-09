@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Map.css";
 import Footer from "./Footer";
 
-export default function Map({ searchLocation }) {
+export default function Map({ currentLocation, searchHistory }) {
   const mapRef = useRef(null);
-  const markerRef = useRef(null);
+  const markersRef = useRef({});
   
   const defaultCoords = [34.052235, -118.243683];
 
@@ -17,7 +17,8 @@ export default function Map({ searchLocation }) {
           attribution: '© OpenStreetMap contributors'
         }).addTo(mapRef.current);
         
-        markerRef.current = L.marker(defaultCoords)
+        // Add default marker for Los Angeles
+        markersRef.current["Los Angeles"] = L.marker(defaultCoords)
           .addTo(mapRef.current)
           .bindPopup('Los Angeles, CA')
           .openPopup();
@@ -47,28 +48,60 @@ export default function Map({ searchLocation }) {
   }, []);
 
   useEffect(() => {
-    if (mapRef.current && searchLocation && searchLocation.lat && searchLocation.lon) {
-      // Remove previous marker
-      if (markerRef.current) {
-        mapRef.current.removeLayer(markerRef.current);
+    if (mapRef.current && currentLocation && currentLocation.lat && currentLocation.lon) {
+      const coords = [currentLocation.lat, currentLocation.lon];
+      
+      if (markersRef.current[currentLocation.name]) {
+        mapRef.current.removeLayer(markersRef.current[currentLocation.name]);
       }
       
-      const newCoords = [searchLocation.lat, searchLocation.lon];
-      markerRef.current = L.marker(newCoords)
+      markersRef.current[currentLocation.name] = L.marker(coords)
         .addTo(mapRef.current)
-        .bindPopup(searchLocation.name || 'Searched Location')
+        .bindPopup(`
+          <strong>${currentLocation.name}</strong><br>
+          ${currentLocation.temp.toFixed(1)}°F - ${currentLocation.description}
+          <img src="https://openweathermap.org/img/wn/${currentLocation.icon}.png" alt="weather icon">
+        `)
         .openPopup();
       
-      mapRef.current.setView(newCoords, 10);
+      mapRef.current.setView(coords, 10);
     }
-  }, [searchLocation]);
+  }, [currentLocation]);
+
+  useEffect(() => {
+    if (mapRef.current && searchHistory.length > 0) {
+      searchHistory.forEach(location => {
+        const coords = [location.lat, location.lon];
+        
+        if (markersRef.current[location.name]) {
+          return;
+        }
+        
+        markersRef.current[location.name] = L.marker(coords)
+          .addTo(mapRef.current)
+          .bindPopup(`
+            <strong>${location.name}</strong><br>
+            ${location.temp.toFixed(1)}°F - ${location.description}
+            <img src="https://openweathermap.org/img/wn/${location.icon}.png" alt="weather icon">
+          `);
+      });
+      
+      if (searchHistory.length > 1) {
+        const bounds = [];
+        searchHistory.forEach(location => {
+          bounds.push([location.lat, location.lon]);
+        });
+        
+        mapRef.current.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }
+  }, [searchHistory]);
 
   return (
     <div>
       <div className="map-container">
         <div id="map"></div>
       </div>
-      <Footer />
     </div>
   );
 }

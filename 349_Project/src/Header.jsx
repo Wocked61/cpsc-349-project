@@ -43,7 +43,6 @@ function Header() {
       <ul className={`menu ${menuOpen ? "open" : ""}`}>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/App">TimeZones</Link></li>
-        <li><Link to="/Map">Map</Link></li>
         <li><Link to="/Convert">Convert Time</Link></li>
       </ul>
     </header>
