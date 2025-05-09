@@ -99,7 +99,7 @@ const App = () => {
       const data = await res.json();
       if (data.cod !== "200") {
         alert("City or ZIP not found. Please try again.");
-        return;
+        return false; // Return false on failure
       }
       setWeatherData(data);
       
@@ -113,6 +113,7 @@ const App = () => {
       };
       
       setCurrentLocation(newLocation);
+      setCity("");
       
       setSearchHistory(prevHistory => {
         const locationExists = prevHistory.some(item => 
@@ -129,10 +130,12 @@ const App = () => {
         return prevHistory;
       });
       
-      fetchTime(data.city.coord.lat, data.city.coord.lon);
+      await fetchTime(data.city.coord.lat, data.city.coord.lon);
+      return true; 
     } catch (err) {
       console.error(err);
       alert("Network error or invalid response.");
+      return false; 
     }
   };
 
@@ -227,7 +230,26 @@ const App = () => {
               <hr />
               <button 
                 className="toggle-map" 
-                onClick={() => setShowMap(!showMap)}
+                onClick={async () => {
+                  if (showMap) {
+                    setShowMap(false);
+                  } else {
+
+                    if (!currentLocation) {
+                      try {
+                        const success = await fetchWeather("Los Angeles", days);
+                        if (success) {
+                          setShowMap(true);
+                        }
+                      } catch (error) {
+                        console.error("Error fetching default location:", error);
+                        alert("Couldn't load default location. Please try again.");
+                      }
+                    } else {
+                      setShowMap(true);
+                    }
+                  }
+                }}
               >
                 {showMap ? "Hide Map" : "Show Map"}
               </button>

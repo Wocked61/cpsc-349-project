@@ -160,8 +160,16 @@ body {
   background-color: #5d82e6;
 }
 
+
+.search:hover {
+  background-color: #4a6bbf;
+}
+
 .current-location {
-  background-color: #5f646a;
+  background-color: #5d82e6;
+}
+.current-location:hover {
+  background-color: #4a6bbf;
 }
 
 /* Info Boxes */
@@ -252,6 +260,10 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.toggle-map:hover {
+  background-color: #4a6bbf;
 }
 
 .history-items {
