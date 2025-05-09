@@ -57,7 +57,6 @@ function Convert() {
       return;
     }
 
-    // Adjust for AM/PM if needed
     if (!use24Hour) {
       if (amOrPm === "PM" && adjustedHour < 12) adjustedHour += 12;
       if (amOrPm === "AM" && adjustedHour === 12) adjustedHour = 0;
@@ -65,7 +64,7 @@ function Convert() {
 
     const fromOffset = timeZones[fromZone].offset;
     const toOffset = timeZones[toZone].offset;
-    const offsetDiff = toOffset - fromOffset; // in minutes
+    const offsetDiff = toOffset - fromOffset;
 
     const inputDate = new Date(`${dateOnly}T${String(adjustedHour).padStart(2, "0")}:${String(adjustedMinute).padStart(2, "0")}:00`);
     const convertedDate = new Date(inputDate.getTime() + offsetDiff * 60000);
@@ -86,7 +85,7 @@ function Convert() {
 
 
   return (
-    <>
+    <div className="page-wrapper">
       <div className="convert-container">
         <h1>Convert Time</h1>
 
@@ -137,7 +136,7 @@ function Convert() {
               value={minute}
               onChange={(e) => setMinute(e.target.value)}
               placeholder="MM"
-           />
+            />
 
             {!use24Hour && (
               <select
@@ -174,7 +173,7 @@ function Convert() {
         )}
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 

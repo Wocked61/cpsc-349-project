@@ -1,7 +1,9 @@
 .convert-container {
     max-width: 700px;
+    width: 90%; 
     margin: 50px auto;
     margin-top: 100px;
+    margin-bottom: 50px; 
     padding: 30px;
     background-color: white;
     border-radius: 12px;
@@ -126,4 +128,23 @@
     pointer-events: none;
   }
 
-  
+ body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+footer {
+  margin-top: auto;
+  width: 100%;
+}
