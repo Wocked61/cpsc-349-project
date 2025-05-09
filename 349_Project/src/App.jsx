@@ -182,8 +182,13 @@ const App = () => {
             );
             const data = await res.json();
             
-            if (data && data.city) {
-              fetchWeather(data.city, days);
+            if (data && (data.city || data.locality)) {
+              const locationName = data.city || data.locality || data.principalSubdivision;
+              if (locationName) {
+                fetchWeather(locationName, days);
+              } else {
+                fetchWeatherByCoords(coords.latitude, coords.longitude);
+              }
             } else {
               fetchWeatherByCoords(coords.latitude, coords.longitude);
             }
