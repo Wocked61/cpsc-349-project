@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b lastDeploy -d dist"
+    "deploy": "gh-pages -b lastDeploy -d build"
   },
   "dependencies": {
     "react": "^19.0.0",
